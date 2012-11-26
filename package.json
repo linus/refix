@@ -1,0 +1,24 @@
+{
+  "author": "Linus G Thiel <linus@hanssonlarsson.se> (http://hanssonlarsson.se/)",
+  "name": "refix",
+  "description": "Namespacing redis client proxy",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linus/refix.git"
+  },
+  "main": "lib/refix.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "nodeunit": "*",
+    "docco": "*",
+    "coffee-script": ">= 1.3"
+  },
+  "keywords": ["redis", "prefix", "namespace"]
+}
