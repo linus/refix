@@ -1,5 +1,7 @@
+# The canonical list of redis commands
 commands = require 'redis/lib/commands'
 
+# All commands where the only key is the first argument
 first =
   proxy: (command, prefix, db) ->
     (key, args...) ->
@@ -85,6 +87,7 @@ first =
     'zscore'
   ]
 
+# All commands where all arguments (except an optional callback) are keys
 all =
   proxy: (command, prefix, db) ->
     (keys...) ->
@@ -110,6 +113,7 @@ all =
     'sunionstore'
   ]
 
+# All commands where all arguments except the first is a key
 exceptFirst =
   proxy: (command, prefix, db) ->
     (arg, keys...) ->
@@ -120,6 +124,7 @@ exceptFirst =
     'bitop'
   ]
 
+# All commands where all arguments except the last is a key
 exceptLast =
   proxy: (command, prefix, db) ->
     (keys..., arg, cb) ->
@@ -139,6 +144,7 @@ exceptLast =
     'smove'
   ]
 
+# All commands where every second argument is a key
 everySecond =
   proxy: (command, prefix, db) ->
     (args...) ->
@@ -156,6 +162,7 @@ everySecond =
     'msetnx'
   ]
 
+# Special case for migrate
 migrate =
   proxy: (command, prefix, db) ->
     (host, port, key, dest, timeout, next) ->
@@ -165,6 +172,7 @@ migrate =
     'migrate'
   ]
 
+# All commands where the key arguments are specified as an argument
 dynamic =
   proxy: (command, prefix, db) ->
     (dest, numKeys, args...) ->
@@ -178,6 +186,7 @@ dynamic =
     'zunionstore'
   ]
 
+# Special case for sort
 sort =
   proxy: (command, prefix, db) ->
     (key, args...) ->
@@ -197,6 +206,7 @@ sort =
     'sort'
   ]
 
+# Special case for multi, proxying the multi object itself
 multi =
   proxy: (command, prefix, db) ->
     ->
@@ -206,7 +216,8 @@ multi =
     'multi'
   ]
 
-handlers = [
+# The list of command proxies
+proxies = [
   first
   all
   exceptFirst
@@ -218,6 +229,8 @@ handlers = [
   multi
 ]
 
+# Utility for prefixing all keys in an array, except if it's a function
+# (for callbacks)
 prefixKeys = (prefix, keys) ->
   prefixed = for key in keys
     if typeof key is 'function'
@@ -225,16 +238,19 @@ prefixKeys = (prefix, keys) ->
     else
       prefix + key
 
+# Main entry point
 module.exports = prefixer = (db) ->
   (prefix) ->
     proxy = {}
 
+    # Proxy a command unchanged
     proxyCommand = (command) ->
       proxy[command] = -> db[command].apply db, arguments
 
     for command in commands
-      for handler in handlers when command in handler.commands
-        proxy[command] = handler.proxy command, prefix, db
+      # Find the proxy for this command
+      for p in proxies when command in p.commands
+        proxy[command] = p.proxy command, prefix, db
 
       # Proxy any unproxied commands unchanged
       proxyCommand command unless command of proxy
