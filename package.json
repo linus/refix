@@ -2,7 +2,7 @@
   "author": "Linus G Thiel <linus@hanssonlarsson.se> (http://hanssonlarsson.se/)",
   "name": "refix",
   "description": "Namespacing redis client proxy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/linus/refix.git"
