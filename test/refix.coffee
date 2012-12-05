@@ -126,7 +126,7 @@ exports.sort = (test) ->
     test.done()
 
 exports.multi = (test) ->
-  test.expect 6
+  test.expect 12
 
   p = refixed 'foo'
 
@@ -143,8 +143,15 @@ exports.multi = (test) ->
     exec: (next) -> next()
 
   m = p.multi()
-  m.get 'k1'
-  m.set 'k2', 'v'
-  m.zunionstore 'dest', 2, 'src1', 'src2'
+  m.get('k1')
+  m.set('k2', 'v')
+  m.zunionstore('dest', 2, 'src1', 'src2')
   m.exec ->
-    test.done()
+
+    # Chain
+    p.multi()
+      .get('k1')
+      .set('k2', 'v')
+      .zunionstore('dest', 2, 'src1', 'src2')
+      .exec ->
+        test.done()

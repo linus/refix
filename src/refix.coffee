@@ -210,7 +210,7 @@ sort =
 multi =
   proxy: (command, prefix, db) ->
     ->
-      prefixer(db.multi()) prefix
+      prefixer(db.multi(), true) prefix
 
   commands: [
     'multi'
@@ -239,7 +239,7 @@ prefixKeys = (prefix, keys) ->
       prefix + key
 
 # Main entry point
-module.exports = prefixer = (db) ->
+module.exports = prefixer = (db, chain) ->
   (prefix) ->
     proxy = {}
 
@@ -250,7 +250,12 @@ module.exports = prefixer = (db) ->
     for command in commands
       # Find the proxy for this command
       for p in proxies when command in p.commands
-        proxy[command] = p.proxy command, prefix, db
+        do (command) ->
+          c = p.proxy command, prefix, db
+          proxy[command] = ->
+            r = c.apply db, arguments
+
+            if chain then proxy else r
 
       # Proxy any unproxied commands unchanged
       proxyCommand command unless command of proxy
