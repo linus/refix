@@ -186,6 +186,19 @@ dynamic =
     'zunionstore'
   ]
 
+# Eval is just like dynamic, but not prefixing the script
+evil =
+  proxy: (command, prefix, db) ->
+    (script, numKeys, args...) ->
+      keys = args.splice 0, numKeys
+      prefixed = prefixKeys prefix, keys
+
+      db[command] script, numKeys, prefixed..., args...
+
+  commands: [
+    'eval'
+  ]
+
 # Special case for sort
 sort =
   proxy: (command, prefix, db) ->
@@ -225,6 +238,7 @@ proxies = [
   everySecond
   migrate
   dynamic
+  evil
   sort
   multi
 ]

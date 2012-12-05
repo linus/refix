@@ -111,6 +111,22 @@ exports.dynamic = (test) ->
   p.zinterstore 'dest', 2, 'key1', 'key2', 'weights', 2, 3, ->
     test.done()
 
+exports.eval = (test) ->
+  test.expect 5
+
+  p = refixed 'foo'
+
+  db.eval = (script, numKeys, key1, key2, arg1, arg2, next) ->
+    test.equal script, 'script bar'
+    test.equal key1, 'fookey1'
+    test.equal key2, 'fookey2'
+    test.equal arg1, 'arg1'
+    test.equal arg2, 'arg2'
+    next()
+
+  p.eval 'script bar', 2, 'key1', 'key2', 'arg1', 'arg2', ->
+    test.done()
+
 exports.sort = (test) ->
   test.expect 3
 
