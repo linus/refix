@@ -141,6 +141,19 @@ exports.sort = (test) ->
   p.sort 'list', 'by', 'nosort', 'get', '*', ->
     test.done()
 
+exports.keys = (test) ->
+  test.expect 2
+
+  p = refixed 'foo'
+
+  db.keys = (pattern, next) ->
+    test.equal pattern, 'foo*'
+    next null, ['foobar']
+
+  p.keys '*', (err, result) ->
+    test.equal result.shift(), 'bar'
+    test.done()
+
 exports.multi = (test) ->
   test.expect 12
 

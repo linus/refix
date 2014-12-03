@@ -219,6 +219,21 @@ sort =
     'sort'
   ]
 
+# Special case for keys, returning the keys with the prefix stripped
+keys =
+  proxy: (command, prefix, db) ->
+    (pattern, next) ->
+      return unless next
+
+      db[command] prefix + pattern, (err, result) ->
+        return next err if err
+
+        next null, (k.substring(prefix.length) for k in result)
+
+  commands: [
+    'keys'
+  ]
+
 # Special case for multi, proxying the multi object itself
 multi =
   proxy: (command, prefix, db) ->
@@ -240,6 +255,7 @@ proxies = [
   dynamic
   evil
   sort
+  keys
   multi
 ]
 
