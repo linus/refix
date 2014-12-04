@@ -7,7 +7,7 @@ redis commands. Given a string, it will prefix all keys in all redis commands
 with that string.
 
 ## Version
-0.1.1
+0.1.2
 
 ## Installation
 
