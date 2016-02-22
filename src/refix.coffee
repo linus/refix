@@ -1,5 +1,5 @@
 # The canonical list of redis commands
-commands = require 'redis/lib/commands'
+commands = require('redis-commands').list
 
 # All commands where the only key is the first argument
 first =
