@@ -14,7 +14,9 @@
   "engines": {
     "node": ">= 0.8.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "redis-commands": "^1.1.0"
+  },
   "devDependencies": {
     "coffee-script": "^1.10.0",
     "docco": "^0.7.0",
