@@ -1,3 +1,11 @@
+0.1.5 / 2016-10-10
+
+- Add .gitignore and .npmignore files
+
+0.1.4 / 2016-02-23
+
+- Add missing redis commands
+
 0.1.2 / 2014-12-04
 
 - Support keys command, fixes #2
